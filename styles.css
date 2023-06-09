@@ -7,3 +7,10 @@ html, body {
    height: 100%;
    display: block;
 }
+
+
+.info-container{
+   position:absolute;
+   width: 25%;
+   height: 25%;
+}

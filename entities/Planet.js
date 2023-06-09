@@ -10,7 +10,7 @@ export class Planet {
   radius;
   gravitational_parameter;
   orbital_eccentricity;
-  theta;
+  theta = 0;
   p;
   isOrbitDisplayed = false;
   r;
@@ -19,6 +19,7 @@ export class Planet {
   period;
   speed;
   distance;
+  obj3D = new THREE.Object3D();
 
   constructor(
     scene,
@@ -27,7 +28,9 @@ export class Planet {
     radius,
     distance,
     text_path,
-    parent = null
+    parent = null,
+    hasRings = false,
+    info = null
   ) {
     this.distance = distance;
     this.mass = mass;
@@ -42,10 +45,27 @@ export class Planet {
 
     this.planetMesh = new THREE.Mesh(this.sphereGeometry, this.material);
 
+    if (hasRings) {
+      const planeGeometry = new THREE.BoxGeometry(
+        this.radius * 8,
+        0.1,
+        this.radius * 8
+      );
+
+      const ringsMaterial = new THREE.MeshBasicMaterial({
+        map: loader.load('./textures/planets/txt_saturn_rings.png'),
+      });
+      ringsMaterial.transparent = true;
+
+      const planeMesh = new THREE.Mesh(planeGeometry, ringsMaterial);
+      planeMesh.position.set(0, 0, 0);
+      this.obj3D.add(planeMesh);
+    }
     if (parent) {
       this.parent = parent;
       this.parent.planets.push(this);
-      this.parent.obj3D.add(this.planetMesh);
+      this.obj3D.add(this.planetMesh);
+      this.parent.obj3D.add(this.obj3D);
     } else {
       scene.add(this.planetMesh);
       this.parent = {
@@ -56,7 +76,7 @@ export class Planet {
       };
     }
 
-    this.planetMesh.position.set(this.distance, 0, 0);
+    this.planetMesh.position.set(0, 0, 0);
 
     this.period =
       Math.PI *
@@ -64,14 +84,28 @@ export class Planet {
       Math.sqrt(Math.pow(this.distance, 3) / (G_CONST * this.parent.mass));
 
     this.angular_velocity = (2 * Math.PI) / this.period;
+
+    this.theta = Math.random() * Math.PI * 2;
+
+    const orbitGeometry = new THREE.RingGeometry(
+      this.distance - 1,
+      this.distance + this.radius - 1,
+      256
+    );
+    const orbitMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+    });
+    const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
+    orbit.rotation.x = -Math.PI / 2;
+    this.parent.obj3D.add(orbit);
   }
 
-  update(dt = 0.016) {
-    this.planetMesh.position.set(
+  update(dt = 0.1) {
+    this.obj3D.position.set(
       this.distance * Math.cos(this.theta),
       0,
       this.distance * Math.sin(this.theta)
     );
-    theta += this.angular_velocity * dt;
+    this.theta += this.angular_velocity * dt;
   }
 }

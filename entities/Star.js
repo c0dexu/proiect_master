@@ -33,7 +33,7 @@ export class Star {
 
   update(dt = 0.01) {
     this.planets.forEach((planet) => {
-      planet.update();
+      planet.update(dt);
     });
   }
 }
