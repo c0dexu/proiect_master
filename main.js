@@ -39,7 +39,7 @@ const properties = {
   deltaTime: dt,
 };
 
-const gui = new GUI();
+const gui = new GUI(); // gui utilizat pt controlul camerei si timpului
 
 gui.add(properties, 'mScaleFactor', 0, 1).onChange((value) => {
   spd_factor = value;
@@ -97,17 +97,18 @@ document.addEventListener('mouseup', () => {
   isClicked = false;
 });
 
+// event pt calcularea rotatiei camerei
 document.addEventListener('mousemove', (event) => {
-  dx = prev_x - event.clientX;
+  dx = prev_x - event.clientX; // se calcueaza diferenta de pozitii dintre pozitia finala si cea initiala
   dy = prev_y - event.clientY;
   prev_x = event.clientX;
   prev_y = event.clientY;
 
   if (isClicked) {
-    theta = dx * (Math.PI / 256);
+    theta = dx * (Math.PI / 256); // ea este utilizata pt a sti cat de mult se roteste camera
     phi = dy * (Math.PI / 256);
 
-    camera.rotation.y += theta;
+    camera.rotation.y += theta; // aplica rotatia
     camera.rotation.x += phi;
   }
 });
@@ -123,6 +124,7 @@ function resizeRendererToDisplaySize(renderer) {
   return needResize;
 }
 
+// se genereaza sistemul solar
 const sun = new Star(scene, 0, 0, 0, UNIT_MASS * 1000, UNIt_RADIUS * 10);
 
 sun.obj3D.position.set(UNIT_AU / 2, 0, 0);
@@ -216,8 +218,7 @@ const pluto = new Planet(
   false
 );
 
-console.log(scene);
-
+// functia de afisare obiecte grafice
 function render(time) {
   time *= 0.001;
 
@@ -237,19 +238,24 @@ function render(time) {
   camera.getWorldDirection(direction);
   let xdir = direction.x;
   let ydir = direction.y;
-  let zdir = direction.z;
+  let zdir = direction.z; // calculeaza directia camerei
 
   if (isBackward) {
+    // daca se apasa S, se misca inapoi
     xdir *= -1;
     ydir *= -1;
     zdir *= -1;
   }
+
+  // update la pozitia camerei
 
   if (isForward || isBackward) {
     camera.position.x += xdir * UNIT_AU * spd_factor;
     camera.position.y += ydir * UNIT_AU * spd_factor;
     camera.position.z += zdir * UNIT_AU * spd_factor;
   }
+
+  // functie folosite pt responsive
 
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;

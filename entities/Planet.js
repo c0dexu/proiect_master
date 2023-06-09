@@ -1,26 +1,25 @@
 import * as THREE from 'three';
 import { G_CONST, UNIT_AU, UNIT_MASS, UNIt_RADIUS } from '../constants.js';
 
+// clasa planeta
 export class Planet {
   sphereGeometry;
   planetMesh;
   material;
-  parent;
-  mass;
-  radius;
+  parent; // parintele(soarele)
+  mass; // masa
+  radius; // raza
   gravitational_parameter;
   orbital_eccentricity;
-  theta = 0;
-  p;
-  isOrbitDisplayed = false;
-  r;
-  angular_velocity = 0;
+  theta = 0; // unghiul orbital
+  angular_velocity = 0; // viteza unghiulara
   semi_major = 0;
-  period;
-  speed;
-  distance;
+  period; // perioada orbitala
+  speed; // biteaza orbitala
+  distance; // distanta fata de soare
   obj3D = new THREE.Object3D();
 
+  // in constructor se seteaza proprietatile fizice ale planetei
   constructor(
     scene,
 
