@@ -22,7 +22,9 @@ export class Star {
     this.starMesh = new THREE.Mesh(this.sphereGeometry, this.material);
     this.mass = mass * UNIT_MASS;
     this.radius = radius * UNIt_RADIUS;
-    scene.add(this.starMesh);
+    this.obj3D.add(this.starMesh);
+    scene.add(this.obj3D);
+
     this.lightSource.position.set(x, y, z);
     this.starMesh.position.x = x;
     this.starMesh.position.y = y;

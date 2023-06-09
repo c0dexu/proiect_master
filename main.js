@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { UNIT_AU, UNIT_MASS, UNIt_RADIUS } from './constants.js';
 import { Star } from './entities/Star.js';
+import { Planet } from './entities/Planet.js';
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGL1Renderer({ antialias: true, canvas });
@@ -90,6 +91,15 @@ function resizeRendererToDisplaySize(renderer) {
 
 const sun = new Star(scene, 0, 0, -UNIT_AU, UNIT_MASS * 1000, UNIt_RADIUS);
 
+const earth = new Planet(
+  scene,
+  UNIT_MASS,
+  UNIt_RADIUS,
+  UNIT_AU,
+  'text_earth.jpg',
+  sun
+);
+
 console.log(scene);
 
 function render(time) {
@@ -104,6 +114,8 @@ function render(time) {
   if (isSpace) {
     camera.position.y += 0.1;
   }
+
+  sun.update();
 
   if (resizeRendererToDisplaySize(renderer)) {
     const canvas = renderer.domElement;

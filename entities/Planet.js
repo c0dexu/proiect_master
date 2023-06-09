@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { G_CONST, UNIT_MASS, UNIt_RADIUS } from '../constants.js';
+import { G_CONST, UNIT_AU, UNIT_MASS, UNIt_RADIUS } from '../constants.js';
 
 export class Planet {
   sphereGeometry;
@@ -22,23 +22,22 @@ export class Planet {
 
   constructor(
     scene,
-    x,
-    y,
-    z,
+
     mass,
     radius,
     distance,
     text_path,
     parent = null
   ) {
-    this.mass = mass * UNIT_MASS;
-    this.radius = radius * UNIt_RADIUS;
-    this.sphereGeometry = new SphereGeometry(this.radius, 16, 16);
+    this.distance = distance;
+    this.mass = mass;
+    this.radius = radius;
+    this.sphereGeometry = new THREE.SphereGeometry(this.radius, 16, 16);
 
     const loader = new THREE.TextureLoader();
 
-    this.material = new THREE.MeshPhongMaterial({
-      map: loader.load(`textures/planets/${text_path}`),
+    this.material = new THREE.MeshBasicMaterial({
+      map: loader.load(`./textures/planets/${text_path}`),
     });
 
     this.planetMesh = new THREE.Mesh(this.sphereGeometry, this.material);
@@ -57,14 +56,14 @@ export class Planet {
       };
     }
 
-    this.planetMesh.position.set(x, y, z);
+    this.planetMesh.position.set(this.distance, 0, 0);
 
     this.period =
       Math.PI *
       2 *
       Math.sqrt(Math.pow(this.distance, 3) / (G_CONST * this.parent.mass));
 
-    this.angular_velocity = (2 * Math > PI) / this.period;
+    this.angular_velocity = (2 * Math.PI) / this.period;
   }
 
   update(dt = 0.016) {
